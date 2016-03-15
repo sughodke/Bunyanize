@@ -1,22 +1,31 @@
 {
-  "name": "BunyanTransform",
+  "name": "bunyanize",
   "version": "0.0.1",
-  "description": "",
-  "main": "src/index.js",
+  "description": "Convert a JSON stream into Bunyan Log format",
+  "main": "transform.js",
+  "dependencies": {
+    "bunyan": "^1.7.1",
+    "underscore": "^1.8.3",
+    "minimist": "^1.2.0"
+  },
+  "devDependencies": {},
   "scripts": {
-    "test": "grunt"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sughodke/$$/"
+    "url": "git+https://github.com/sughodke/Bunyanize.git"
   },
   "keywords": [
+    "bunyan",
+    "logs",
+    "transform",
+    "convert"
   ],
   "author": "Sid Ghodke",
   "license": "ISC",
-  "dependencies": {
-    "minimist": "",
-    "underscore": "",
-    "bunyan": ""
-  }
+  "bugs": {
+    "url": "https://github.com/sughodke/Bunyanize/issues"
+  },
+  "homepage": "https://github.com/sughodke/Bunyanize#readme"
 }
