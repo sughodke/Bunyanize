@@ -1,0 +1,22 @@
+{
+  "name": "BunyanTransform",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sughodke/$$/"
+  },
+  "keywords": [
+  ],
+  "author": "Sid Ghodke",
+  "license": "ISC",
+  "dependencies": {
+    "minimist": "",
+    "underscore": "",
+    "bunyan": ""
+  }
+}
