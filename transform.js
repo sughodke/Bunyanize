@@ -16,27 +16,53 @@ var bunyan = require('bunyan');
 var log = bunyan.createLogger({name: argv.name || 'Doctor WebApp'});
 
 
+function _bunyanize(l) {
+  var metadata = ['module', 'event'];
+  var formattedTime = new Date(l.timestamp).toUTCString()
+
+  log[l.level.toLowerCase() || 'info'](
+      // Meta Data
+      _.extend(
+        { time: formattedTime }, 
+        _.pick(l.data, metadata),
+        _.omit(argv, '_', 'name')
+      ), 
+
+      // Payload
+      _.omit(l.data, metadata, 'timestamp')
+  );
+}
+
 function bunyanize(fileName) {
   var input = JSON.parse( fs.readFileSync(fileName, 'utf8') );
 
-  input.map(function(l) {
-    var metadata = ['module', 'event'];
-    var formattedTime = new Date(l.timestamp).toUTCString()
+  input.map(_bunyanize);
+}
 
-    // Log Level is the function-name
-    log[l.level.toLowerCase() || 'info'](
-        // Meta Data
-        _.extend(
-          { time: formattedTime }, 
-          _.pick(l.data, metadata),
-          _.omit(argv, '_', 'name')
-        ), 
+function fromStdin() {
+  var stdin = process.stdin,
+      inputChunks = [];
 
-        // Payload
-        _.omit(l.data, metadata, 'timestamp')
-    );
+  stdin.resume();
+  stdin.setEncoding('utf8');
+
+  stdin.on('data', function (chunk) {
+    inputChunks.push(chunk);
+  });
+
+  stdin.on('end', function () {
+    var inputJSON = inputChunks.join(),
+        parsedData = JSON.parse(inputJSON);
+
+    parsedData.map(_bunyanize);
   });
 }
 
-argv._.map(bunyanize);
+function main() {
+  return argv._.length === 0 ?
+    fromStdin() :
+    argv._.map(bunyanize);
+}
 
+
+main();
