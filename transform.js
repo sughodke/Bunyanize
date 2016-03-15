@@ -12,6 +12,7 @@
  *  --pid=-1           Overwrite the system pid, during transformation
  *  --hostname=Beaker  Overwrite the hostname, during transformation
  *  --name="WebApp"    Set the application name
+ *  --pick="logs"      Set the key which contains all the Logs in the input
  *
  */
 
@@ -32,7 +33,7 @@ function _bunyanize(item) {
     _.extend(
       { time: formattedTime }, 
       _.pick(item.data, metadata),
-      _.omit(argv, '_', 'name')
+      _.omit(argv, '_', 'name', 'pick')
     ), 
 
     // Payload
@@ -40,10 +41,16 @@ function _bunyanize(item) {
   );
 }
 
+function _traces(input) {
+  return argv.pick ?
+    input[argv.pick] :
+    input;
+}
+
 function bunyanize(fileName) {
   var input = JSON.parse( fs.readFileSync(fileName, 'utf8') );
 
-  input.map(_bunyanize);
+  _traces(input).map(_bunyanize);
 }
 
 function fromStdin() {
@@ -61,7 +68,7 @@ function fromStdin() {
     var inputJSON = inputChunks.join();
     var parsedData = JSON.parse(inputJSON);
 
-    parsedData.map(_bunyanize);
+    _traces(parsedData).map(_bunyanize);
   });
 }
 
